@@ -1,3 +1,4 @@
+import 'package:app/models/genres.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/movie_data.dart';
@@ -23,9 +24,11 @@ class HomeController extends GetxController
 
   bool lastPage = false;
 
-  List<int> genres = <int>[].obs;
+  List<int> genresFilter = <int>[].obs;
 
   List<Movies> movies = <Movies>[].obs;
+
+  List<Genres>? genresList = <Genres>[];
 
   @override
   Future<void> onEndScroll() async {
@@ -46,8 +49,9 @@ class HomeController extends GetxController
   }
 
   @override
-  void onInit() {
-    getMoviesData(isRefresh: true);
+  void onInit() async {
+    await getGenres();
+    await getMoviesData(isRefresh: true);
     super.onInit();
     debugPrint('HomeController - onInit');
   }
@@ -56,6 +60,12 @@ class HomeController extends GetxController
   void onClose() {
     debugPrint('HomeController - onClose');
     super.onClose();
+  }
+
+  Future getGenres() async {
+    GenresData? response = await _client.getGenres();
+
+    genresList = response!.genres!.cast<Genres>();
   }
 
   Future<bool> getMoviesData({bool isRefresh = false}) async {
@@ -71,12 +81,20 @@ class HomeController extends GetxController
     }
 
     try {
-      final response = await _client.getTopMovies(page: currentPage);
+      MovieData? response;
+
+      if (textController.text == "") {
+        response = await _client.getTopMovies(page: currentPage);
+      } else {
+        response = await _client.searchMovies(
+            page: currentPage, search: textController.text);
+      }
 
       List<Movies> newResponse = <Movies>[];
-      if (genres.isNotEmpty) {
+      if (genresFilter.isNotEmpty) {
         for (var movie in response!.results!) {
-          if (movie.genreIds!.any((element) => genres.contains(element))) {
+          if (movie.genreIds!
+              .any((element) => genresFilter.contains(element))) {
             newResponse.add(movie);
           }
         }
@@ -85,6 +103,7 @@ class HomeController extends GetxController
       }
 
       if (isRefresh && newResponse.isEmpty) {
+        movies.clear();
         change(null, status: RxStatus.empty());
       } else if (isRefresh) {
         movies = newResponse;
@@ -99,6 +118,12 @@ class HomeController extends GetxController
       totalPages = response.totalPages!;
 
       debugPrint(response.toJson().toString());
+
+      if (movies.length <= 10) {
+        currentPage++;
+        getMoviesData();
+      }
+
       return true;
     } catch (e) {
       change(null, status: RxStatus.error(e.toString()));
@@ -111,10 +136,10 @@ class HomeController extends GetxController
       case 28:
         {
           acao.value = !acao.value;
-          genres.contains(28)
-              ? genres.removeWhere((element) => element == 28)
-              : genres.add(28);
-          debugPrint(genres.toString());
+          genresFilter.contains(28)
+              ? genresFilter.removeWhere((element) => element == 28)
+              : genresFilter.add(28);
+          debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }
         break;
@@ -122,10 +147,10 @@ class HomeController extends GetxController
       case 12:
         {
           aventura.value = !aventura.value;
-          genres.contains(12)
-              ? genres.removeWhere((element) => element == 12)
-              : genres.add(12);
-          debugPrint(genres.toString());
+          genresFilter.contains(12)
+              ? genresFilter.removeWhere((element) => element == 12)
+              : genresFilter.add(12);
+          debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }
         break;
@@ -133,20 +158,20 @@ class HomeController extends GetxController
       case 14:
         {
           fantasia.value = !fantasia.value;
-          genres.contains(14)
-              ? genres.removeWhere((element) => element == 14)
-              : genres.add(14);
-          debugPrint(genres.toString());
+          genresFilter.contains(14)
+              ? genresFilter.removeWhere((element) => element == 14)
+              : genresFilter.add(14);
+          debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }
         break;
       case 35:
         {
           comedia.value = !comedia.value;
-          genres.contains(35)
-              ? genres.removeWhere((element) => element == 35)
-              : genres.add(35);
-          debugPrint(genres.toString());
+          genresFilter.contains(35)
+              ? genresFilter.removeWhere((element) => element == 35)
+              : genresFilter.add(35);
+          debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }
         break;

@@ -53,141 +53,165 @@ class _HomeViewState extends State<HomeView> with RouteAware {
   @override
   Widget build(BuildContext context) {
     debugPrint('HomeView - build');
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Filmes'),
-        ),
-        body: Column(
-          children: [
-            Obx(
-              () => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    child: TextButton(
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: const BorderSide(color: Colors.blue))),
-                          backgroundColor: MaterialStateProperty.all(
-                              controller.acao.value
-                                  ? Colors.blue
-                                  : Colors.white),
-                        ),
-                        onPressed: () {
-                          controller.categoryOnTap(28);
-                        },
-                        child: const Text(
-                          "Ação",
-                          style: TextStyle(color: Colors.black),
-                        )),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    child: TextButton(
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: const BorderSide(color: Colors.blue))),
-                          backgroundColor: MaterialStateProperty.all(
-                              controller.aventura.value
-                                  ? Colors.blue
-                                  : Colors.white),
-                        ),
-                        onPressed: () {
-                          controller.categoryOnTap(12);
-                        },
-                        child: const Text(
-                          "Aventura",
-                          style: TextStyle(color: Colors.black),
-                        )),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    child: TextButton(
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: const BorderSide(color: Colors.blue))),
-                          backgroundColor: MaterialStateProperty.all(
-                              controller.fantasia.value
-                                  ? Colors.blue
-                                  : Colors.white),
-                        ),
-                        onPressed: () {
-                          controller.categoryOnTap(14);
-                        },
-                        child: const Text(
-                          "Fantasia",
-                          style: TextStyle(color: Colors.black),
-                        )),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    child: TextButton(
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: const BorderSide(color: Colors.blue))),
-                          backgroundColor: MaterialStateProperty.all(
-                              controller.comedia.value
-                                  ? Colors.blue
-                                  : Colors.white),
-                        ),
-                        onPressed: () {
-                          controller.categoryOnTap(35);
-                        },
-                        child: const Text(
-                          "Comédia",
-                          style: TextStyle(color: Colors.black),
-                        )),
-                  ),
-                ],
-              ),
+    return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          currentFocus.unfocus();
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Filmes'),
             ),
-            Expanded(
-              child: controller.obx(
-                (state) => ListView.builder(
-                  controller: controller.scroll,
-                  itemCount: state?.length,
-                  itemBuilder: (context, index) {
-                    final Movies list = state![index];
-                    return ListTile(
-                      isThreeLine: true,
-                      leading: Text(
-                        (++index).toString(),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      title: Text(list.title ?? "No Title"),
-                      subtitle:
-                          Text('${list.overview}\n${list.genreIds.toString()}'),
-                    );
+            body: Column(
+              children: [
+                TextFormField(
+                  controller: controller.textController,
+                  onChanged: (value) {
+                    controller.getMoviesData(isRefresh: true);
                   },
                 ),
-                onLoading: const Center(child: CircularProgressIndicator()),
-                onEmpty: const Center(
-                  child: Text(
-                    'Movies not found',
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
+                Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                        child: TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                      side: const BorderSide(
+                                          color: Colors.blue))),
+                              backgroundColor: MaterialStateProperty.all(
+                                  controller.acao.value
+                                      ? Colors.blue
+                                      : Colors.white),
+                            ),
+                            onPressed: () {
+                              controller.categoryOnTap(28);
+                            },
+                            child: const Text(
+                              "Ação",
+                              style: TextStyle(color: Colors.black),
+                            )),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                        child: TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                      side: const BorderSide(
+                                          color: Colors.blue))),
+                              backgroundColor: MaterialStateProperty.all(
+                                  controller.aventura.value
+                                      ? Colors.blue
+                                      : Colors.white),
+                            ),
+                            onPressed: () {
+                              controller.categoryOnTap(12);
+                            },
+                            child: const Text(
+                              "Aventura",
+                              style: TextStyle(color: Colors.black),
+                            )),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                        child: TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                      side: const BorderSide(
+                                          color: Colors.blue))),
+                              backgroundColor: MaterialStateProperty.all(
+                                  controller.fantasia.value
+                                      ? Colors.blue
+                                      : Colors.white),
+                            ),
+                            onPressed: () {
+                              controller.categoryOnTap(14);
+                            },
+                            child: const Text(
+                              "Fantasia",
+                              style: TextStyle(color: Colors.black),
+                            )),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                        child: TextButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                      side: const BorderSide(
+                                          color: Colors.blue))),
+                              backgroundColor: MaterialStateProperty.all(
+                                  controller.comedia.value
+                                      ? Colors.blue
+                                      : Colors.white),
+                            ),
+                            onPressed: () {
+                              controller.categoryOnTap(35);
+                            },
+                            child: const Text(
+                              "Comédia",
+                              style: TextStyle(color: Colors.black),
+                            )),
+                      ),
+                    ],
                   ),
                 ),
-                onError: (error) => Center(
-                  child: Text(
-                    'Error: Cannot get repositories \n$error',
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
+                Expanded(
+                  child: controller.obx(
+                    (state) => ListView.builder(
+                      controller: controller.scroll,
+                      itemCount: state?.length,
+                      itemBuilder: (context, index) {
+                        final Movies list = state![index];
+                        return ListTile(
+                          isThreeLine: true,
+                          leading: Text(
+                            (++index).toString(),
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          title: Text(list.title ?? "No Title"),
+                          subtitle: Column(
+                            children: <Widget>[
+                              Text('${list.overview}\n'),
+                              for (var item in list.genreIds!)
+                                Text(controller.genresList!
+                                        .firstWhere(
+                                            (element) => element.id == item)
+                                        .name ??
+                                    "")
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    onLoading: const Center(child: CircularProgressIndicator()),
+                    onEmpty: const Center(
+                      child: Text(
+                        'Movies not found',
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    onError: (error) => Center(
+                      child: Text(
+                        'Error: Cannot get repositories \n$error',
+                        style: const TextStyle(fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ],
-        ));
+              ],
+            )));
   }
 
   @override
