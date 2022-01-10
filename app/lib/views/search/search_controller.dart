@@ -177,4 +177,18 @@ class HomeController extends GetxController
         break;
     }
   }
+
+  String returnGenres(List<int>? list) {
+    String concatenate = "";
+
+    for (var item in list!) {
+      concatenate +=
+          (genresList!.firstWhere((element) => element.id == item).name ?? "");
+      concatenate += " - ";
+    }
+
+    concatenate = concatenate.substring(0, concatenate.length - 3);
+
+    return concatenate;
+  }
 }

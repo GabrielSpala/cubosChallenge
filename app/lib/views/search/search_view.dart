@@ -172,23 +172,75 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                       itemCount: state?.length,
                       itemBuilder: (context, index) {
                         final Movies list = state![index];
-                        return ListTile(
-                          isThreeLine: true,
-                          leading: Text(
-                            (++index).toString(),
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          title: Text(list.title ?? "No Title"),
-                          subtitle: Column(
-                            children: <Widget>[
-                              Text('${list.overview}\n'),
-                              for (var item in list.genreIds!)
-                                Text(controller.genresList!
-                                        .firstWhere(
-                                            (element) => element.id == item)
-                                        .name ??
-                                    "")
-                            ],
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width / 20,
+                              right: MediaQuery.of(context).size.width / 20,
+                              bottom: MediaQuery.of(context).size.height / 20),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            height: MediaQuery.of(context).size.height / 1.5,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(25.0),
+                              ),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  'https://image.tmdb.org/t/p/w500' +
+                                      list.posterPath!,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(25.0),
+                                      bottomRight: Radius.circular(25.0),
+                                    ),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(25.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(bottom: 15.0),
+                                          child: Text(
+                                            list.title ?? "No Title",
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                        ),
+                                        Row(children: [
+                                          Text(
+                                              "${controller.returnGenres(list.genreIds)}",
+                                              style: const TextStyle(
+                                                  color: Colors.white)),
+                                        ]),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },
