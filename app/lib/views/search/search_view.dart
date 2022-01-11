@@ -1,4 +1,5 @@
 import 'package:app/models/movie_data.dart';
+import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,207 +63,44 @@ class _HomeViewState extends State<HomeView> with RouteAware {
             appBar: AppBar(
               title: const Text('Filmes'),
             ),
-            body: Column(
-              children: [
-                TextFormField(
-                  controller: controller.textController,
-                  onChanged: (value) {
-                    controller.getMoviesData(isRefresh: true);
-                  },
-                ),
-                Obx(
-                  () => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20),
-                        child: TextButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      side: const BorderSide(
-                                          color: Colors.blue))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  controller.acao.value
-                                      ? Colors.blue
-                                      : Colors.white),
-                            ),
-                            onPressed: () {
-                              controller.categoryOnTap(28);
-                            },
-                            child: const Text(
-                              "Ação",
-                              style: TextStyle(color: Colors.black),
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20),
-                        child: TextButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      side: const BorderSide(
-                                          color: Colors.blue))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  controller.aventura.value
-                                      ? Colors.blue
-                                      : Colors.white),
-                            ),
-                            onPressed: () {
-                              controller.categoryOnTap(12);
-                            },
-                            child: const Text(
-                              "Aventura",
-                              style: TextStyle(color: Colors.black),
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20),
-                        child: TextButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      side: const BorderSide(
-                                          color: Colors.blue))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  controller.fantasia.value
-                                      ? Colors.blue
-                                      : Colors.white),
-                            ),
-                            onPressed: () {
-                              controller.categoryOnTap(14);
-                            },
-                            child: const Text(
-                              "Fantasia",
-                              style: TextStyle(color: Colors.black),
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20),
-                        child: TextButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      side: const BorderSide(
-                                          color: Colors.blue))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  controller.comedia.value
-                                      ? Colors.blue
-                                      : Colors.white),
-                            ),
-                            onPressed: () {
-                              controller.categoryOnTap(35);
-                            },
-                            child: const Text(
-                              "Comédia",
-                              style: TextStyle(color: Colors.black),
-                            )),
-                      ),
-                    ],
+            body: DefaultTabController(
+              length: 4,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: controller.textController,
+                    onChanged: (value) {
+                      controller.getMoviesData(isRefresh: true);
+                    },
                   ),
-                ),
-                Expanded(
-                  child: controller.obx(
-                    (state) => ListView.builder(
-                      controller: controller.scroll,
-                      itemCount: state?.length,
-                      itemBuilder: (context, index) {
-                        final Movies list = state![index];
-                        return Padding(
-                          padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width / 20,
-                              right: MediaQuery.of(context).size.width / 20,
-                              bottom: MediaQuery.of(context).size.height / 20),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width / 1.2,
-                            height: MediaQuery.of(context).size.height / 1.5,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(25.0),
-                              ),
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  'https://image.tmdb.org/t/p/w500' +
-                                      list.posterPath!,
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(25.0),
-                                      bottomRight: Radius.circular(25.0),
-                                    ),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(25.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(bottom: 15.0),
-                                          child: Text(
-                                            list.title ?? "No Title",
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          ),
-                                        ),
-                                        Row(children: [
-                                          Text(
-                                              "${controller.returnGenres(list.genreIds)}",
-                                              style: const TextStyle(
-                                                  color: Colors.white)),
-                                        ]),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    onLoading: const Center(child: CircularProgressIndicator()),
-                    onEmpty: const Center(
-                      child: Text(
-                        'Movies not found',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    onError: (error) => Center(
-                      child: Text(
-                        'Error: Cannot get repositories \n$error',
-                        style: const TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
+                  ButtonsTabBar(
+                      backgroundColor: Colors.blue[600],
+                      unselectedBackgroundColor: Colors.white,
+                      labelStyle: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      unselectedLabelStyle: TextStyle(
+                          color: Colors.blue[600], fontWeight: FontWeight.bold),
+                      borderWidth: 1,
+                      unselectedBorderColor: Colors.blue,
+                      radius: 100,
+                      tabs: [
+                        Tab(text: "Ação"),
+                        Tab(text: "Aventura"),
+                        Tab(text: "Fantasia"),
+                        Tab(text: "Comédia"),
+                      ]),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Icon(Icons.directions_car),
+                        Icon(Icons.directions_transit),
+                        Icon(Icons.directions_bike),
+                        Icon(Icons.directions_bike),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )));
   }
 
@@ -313,5 +151,97 @@ Widget categoryButton(HomeController controller, String text, bool category) {
           text,
           style: const TextStyle(color: Colors.black),
         )),
+  );
+}
+
+Expanded buildTabBars(HomeController controller) {
+  return Expanded(
+    child: controller.obx(
+      (state) => ListView.builder(
+        controller: controller.scroll,
+        itemCount: state?.length,
+        itemBuilder: (context, index) {
+          final Movies list = state![index];
+          return Padding(
+            padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width / 20,
+                right: MediaQuery.of(context).size.width / 20,
+                bottom: MediaQuery.of(context).size.height / 20),
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1.2,
+              height: MediaQuery.of(context).size.height / 1.5,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(25.0),
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://image.tmdb.org/t/p/w500' + list.posterPath!,
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25.0),
+                        bottomRight: Radius.circular(25.0),
+                      ),
+                      gradient: LinearGradient(
+                        colors: [Colors.transparent, Colors.black],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(25.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 15.0),
+                            child: Text(
+                              list.title ?? "No Title",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          ),
+                          Row(children: [
+                            Text("${controller.returnGenres(list.genreIds)}",
+                                style: const TextStyle(color: Colors.white)),
+                          ]),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      onLoading: const Center(child: CircularProgressIndicator()),
+      onEmpty: const Center(
+        child: Text(
+          'Movies not found',
+          style: TextStyle(fontSize: 18),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      onError: (error) => Center(
+        child: Text(
+          'Error: Cannot get repositories \n$error',
+          style: const TextStyle(fontSize: 18),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ),
   );
 }
