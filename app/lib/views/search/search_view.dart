@@ -163,7 +163,6 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                       final Movies list = state[index];
                       return MovieBannerWidget(
                           onTap: () => {
-                                debugPrint("aaaaa"),
                                 controller.selectedMovie = list,
                                 Get.toNamed(ApplicationRoutes.detailsView),
                               },
