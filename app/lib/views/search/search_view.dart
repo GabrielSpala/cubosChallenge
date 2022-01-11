@@ -94,11 +94,9 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                     textStyle: const TextStyle(
                       color: Colors.black,
                       fontSize: 17,
-                      // fontWeight: FontWeight.w600,
                     ),
                   ),
                   decoration: InputDecoration(
-                    // label: Text('Pesquise filmes'),
                     filled: true,
                     hintText: 'Pesquise filmes',
                     contentPadding: const EdgeInsets.all(0),

@@ -21,6 +21,8 @@ class _ApplicationWidgetState extends State<ApplicationWidget> {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSwatch(
+            accentColor: const Color.fromARGB(255, 52, 58, 64)),
       ),
       navigatorKey: Get.key,
       navigatorObservers: [

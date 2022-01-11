@@ -63,10 +63,10 @@ class _DetailsViewState extends State<DetailsView> with RouteAware {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : Padding(
-                  padding:
-                      const EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
-                  child: SingleChildScrollView(
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 25.0, left: 25.0, right: 25.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

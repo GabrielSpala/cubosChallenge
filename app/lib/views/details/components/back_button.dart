@@ -20,7 +20,7 @@ class BackButton extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Container(
-            width: 100,
+            width: MediaQuery.of(context).size.width * 0.23,
             padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
@@ -34,14 +34,15 @@ class BackButton extends StatelessWidget {
                   const Icon(
                     Icons.arrow_back_ios,
                     color: Colors.grey,
+                    size: 13,
                   ),
                   Text(
                     label,
                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
-                        color: Color.fromARGB(255, 20, 55, 74),
+                        color: Color.fromARGB(255, 134, 142, 150),
                         fontSize: 15,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ),
