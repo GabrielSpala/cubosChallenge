@@ -1,3 +1,4 @@
+import 'package:app/models/credits.dart';
 import 'package:app/models/genres.dart';
 import 'package:app/models/movie_details.dart';
 import 'package:dio/dio.dart';
@@ -99,7 +100,7 @@ class MovieService {
     try {
       Response moviesDetail = await _dio.get('/movie/$id?');
 
-      debugPrint('Genres Data: ${moviesDetail.data}');
+      debugPrint('Movie Details: ${moviesDetail.data}');
 
       movie = MovieDetails.fromJson(moviesDetail.data);
     } on DioError catch (e) {
@@ -115,5 +116,29 @@ class MovieService {
     }
 
     return movie;
+  }
+
+  Future<Credits?> getMovieCredits(int? id) async {
+    Credits? credits;
+
+    try {
+      Response movieCredits = await _dio.get('/movie/$id/credits?');
+
+      debugPrint('Movie Credits: ${movieCredits.data}');
+
+      credits = Credits.fromJson(movieCredits.data);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        debugPrint('Dio error!');
+        debugPrint('STATUS: ${e.response?.statusCode}');
+        debugPrint('DATA: ${e.response?.data}');
+        debugPrint('HEADERS: ${e.response?.headers}');
+      } else {
+        debugPrint('Error sending request!');
+        debugPrint(e.message);
+      }
+    }
+
+    return credits;
   }
 }

@@ -58,139 +58,138 @@ class _SearchViewState extends State<SearchView> with RouteAware {
   @override
   Widget build(BuildContext context) {
     debugPrint('SearchView - build');
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          currentFocus.unfocus();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Filmes',
-              style: GoogleFonts.montserrat(
-                textStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        currentFocus.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 75,
+          title: Text(
+            'Filmes',
+            style: GoogleFonts.montserrat(
+              textStyle: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            backgroundColor: Colors.white,
-            elevation: 0,
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 60,
-                  child: TextFormField(
-                    controller: controller.textController,
-                    onChanged: (value) {
-                      controller.getMoviesData(isRefresh: true);
-                    },
-                    style: GoogleFonts.montserrat(
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        // fontWeight: FontWeight.w600,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 60,
+                child: TextFormField(
+                  controller: controller.textController,
+                  onChanged: (value) {
+                    controller.getMoviesData(isRefresh: true);
+                  },
+                  style: GoogleFonts.montserrat(
+                    textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 17,
+                      // fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  decoration: InputDecoration(
+                    // label: Text('Pesquise filmes'),
+                    filled: true,
+                    hintText: 'Pesquise filmes',
+                    contentPadding: const EdgeInsets.all(0),
+                    prefixIcon: Container(
+                      margin: const EdgeInsets.fromLTRB(15, 10, 10, 10),
+                      child: const Icon(
+                        Icons.search,
+                        color: Colors.grey,
                       ),
                     ),
-                    decoration: InputDecoration(
-                      // label: Text('Pesquise filmes'),
-                      filled: true,
-                      hintText: 'Pesquise filmes',
-                      contentPadding: const EdgeInsets.all(0),
-                      prefixIcon: Container(
-                        margin: const EdgeInsets.fromLTRB(15, 10, 10, 10),
-                        child: const Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      fillColor: const Color.fromARGB(255, 241, 243, 245),
-                      focusColor: Colors.red,
-                      hoverColor: Colors.yellow,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(35),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 241, 243, 245)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(35),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 241, 243, 245)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(35),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 241, 243, 245)),
-                      ),
+                    fillColor: const Color.fromARGB(255, 241, 243, 245),
+                    focusColor: Colors.red,
+                    hoverColor: Colors.yellow,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(35),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 241, 243, 245)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(35),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 241, 243, 245)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(35),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 241, 243, 245)),
                     ),
                   ),
                 ),
-                Obx(
-                  () => Container(
-                    margin: const EdgeInsets.only(bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: genreList.map(
-                        (e) {
-                          return MovieGenreBadgeWidget(
-                            label: e['name'],
-                            selected:
-                                (controller.genresFilter.value == e['code']),
-                            onTap: () {
-                              controller.categoryOnTap(e['code']);
-                            },
-                          );
-                        },
-                      ).toList(),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: controller.obx(
-                    (state) => ListView.separated(
-                      separatorBuilder: (context, i) {
-                        return const SizedBox(
-                          height: 15,
+              ),
+              Obx(
+                () => Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: genreList.map(
+                      (e) {
+                        return MovieGenreBadgeWidget(
+                          label: e['name'],
+                          selected:
+                              (controller.genresFilter.value == e['code']),
+                          onTap: () {
+                            controller.categoryOnTap(e['code']);
+                          },
                         );
                       },
-                      controller: controller.scroll,
-                      itemCount: state!.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final Movies list = state[index];
-                        return MovieBannerWidget(
-                            onTap: () => {
-                                  debugPrint("aaaaa"),
-                                  controller.selectedMovie = list,
-                                  Get.toNamed(ApplicationRoutes.detailsView),
-                                },
-                            movie: list);
-                      },
+                    ).toList(),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: controller.obx(
+                  (state) => ListView.separated(
+                    separatorBuilder: (context, i) {
+                      return const SizedBox(
+                        height: 15,
+                      );
+                    },
+                    controller: controller.scroll,
+                    itemCount: state!.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final Movies list = state[index];
+                      return MovieBannerWidget(
+                          onTap: () => {
+                                debugPrint("aaaaa"),
+                                controller.selectedMovie = list,
+                                Get.toNamed(ApplicationRoutes.detailsView),
+                              },
+                          movie: list);
+                    },
+                  ),
+                  onLoading: const Center(child: CircularProgressIndicator()),
+                  onEmpty: const Center(
+                    child: Text(
+                      'Movies not found',
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
                     ),
-                    onLoading: const Center(child: CircularProgressIndicator()),
-                    onEmpty: const Center(
-                      child: Text(
-                        'Movies not found',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    onError: (error) => Center(
-                      child: Text(
-                        'Error: Cannot get repositories \n$error',
-                        style: const TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
+                  ),
+                  onError: (error) => Center(
+                    child: Text(
+                      'Error: Cannot get repositories \n$error',
+                      style: const TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
