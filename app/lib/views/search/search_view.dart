@@ -139,10 +139,10 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                       (e) {
                         return MovieGenreBadgeWidget(
                           label: e['name'],
-                          selected:
-                              (controller.genresFilter.value == e['code']),
+                          selected: (controller.genresFilter == e['code']),
                           onTap: () {
-                            controller.categoryOnTap(e['code']);
+                            controller.setGenresFilter(e['code']);
+                            controller.getMoviesData(isRefresh: true);
                           },
                         );
                       },

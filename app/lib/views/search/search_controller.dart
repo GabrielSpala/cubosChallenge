@@ -14,13 +14,20 @@ class SearchController extends GetxController
 
   bool lastPage = false;
 
-  RxInt genresFilter = 28.obs;
+  final _genresFilter = 28.obs;
 
   List<Movies> movies = <Movies>[].obs;
 
   List<Genres>? genresList = <Genres>[];
 
   Movies selectedMovie = Movies();
+
+  get genresFilter => _genresFilter.value;
+  set genresFilter(value) => _genresFilter.value = value;
+
+  setGenresFilter(int value) {
+    genresFilter = value;
+  }
 
   @override
   Future<void> onEndScroll() async {
@@ -31,7 +38,7 @@ class SearchController extends GetxController
       await getMoviesData();
       Get.back();
     } else {
-      Get.snackbar('Alert', 'End of Repositories');
+      Get.snackbar('Ops...', 'Não há mais Filmes');
     }
   }
 
@@ -55,13 +62,15 @@ class SearchController extends GetxController
   }
 
   Future getGenres() async {
-    GenresData? response = await Get.find<MovieService>().getGenres();
-
-    genresList = response!.genres!.cast<Genres>();
+    var listaDeGeneros = await Get.find<MovieService>().getGenres();
+    genresList!.clear();
+    genresList!.addAll(listaDeGeneros!.genres as List<Genres>);
+    debugPrint(listaDeGeneros.toJson().toString());
   }
 
   Future<bool> getMoviesData({bool isRefresh = false}) async {
     if (isRefresh) {
+      movies.clear();
       change(null, status: RxStatus.loading());
       currentPage = 1;
     } else {
@@ -86,29 +95,23 @@ class SearchController extends GetxController
       List<Movies> newResponse = <Movies>[];
 
       for (var movie in response!.results!) {
-        if (movie.genreIds!.any((element) => genresFilter.value == element)) {
+        if (movie.genreIds!.any((element) => genresFilter == element)) {
           newResponse.add(movie);
         }
       }
 
       if (isRefresh && newResponse.isEmpty) {
-        movies.clear();
         change(null, status: RxStatus.empty());
-      } else if (isRefresh) {
-        movies = newResponse;
-        change(movies, status: RxStatus.success());
       } else {
         movies.addAll(newResponse);
         change(movies, status: RxStatus.success());
       }
 
       currentPage = response.page!;
-
       totalPages = response.totalPages!;
-
       debugPrint(response.toJson().toString());
 
-      if (movies.length <= 10) {
+      if (movies.length <= 10 && !lastPage) {
         currentPage++;
         getMoviesData();
       }
@@ -120,52 +123,14 @@ class SearchController extends GetxController
     }
   }
 
-  categoryOnTap(int id) {
-    switch (id) {
-      case 28:
-        {
-          genresFilter.value = 28;
-          debugPrint(genresFilter.toString());
-          getMoviesData(isRefresh: true);
-        }
-        break;
-
-      case 12:
-        {
-          genresFilter.value = 12;
-          debugPrint(genresFilter.toString());
-          getMoviesData(isRefresh: true);
-        }
-        break;
-
-      case 14:
-        {
-          genresFilter.value = 14;
-          debugPrint(genresFilter.toString());
-          getMoviesData(isRefresh: true);
-        }
-        break;
-      case 35:
-        {
-          genresFilter.value = 35;
-          debugPrint(genresFilter.toString());
-          getMoviesData(isRefresh: true);
-        }
-        break;
-    }
-  }
-
   String returnGenres(List<int>? list) {
-    String concatenate = "";
-
+    String concatenate = '';
     for (var item in list!) {
       concatenate +=
-          (genresList!.firstWhere((element) => element.id == item).name ?? "");
-      concatenate += " - ";
+          (genresList!.firstWhere((element) => element.id == item).name ?? '');
+      concatenate += ' - ';
     }
-
     concatenate = concatenate.substring(0, concatenate.length - 3);
-
     return concatenate;
   }
 }
