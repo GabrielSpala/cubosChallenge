@@ -173,7 +173,7 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                   onLoading: const Center(child: CircularProgressIndicator()),
                   onEmpty: const Center(
                     child: Text(
-                      'Movies not found',
+                      'Nenhum filme foi encontrado...',
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
