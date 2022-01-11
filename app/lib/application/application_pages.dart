@@ -1,3 +1,5 @@
+import 'package:app/views/details/details_binding.dart';
+import 'package:app/views/details/details_view.dart';
 import 'package:get/get.dart';
 import '../views/search/search_binding.dart';
 import '../views/search/search_view.dart';
@@ -11,10 +13,20 @@ class ApplicationPages {
     GetPage(
       name: ApplicationRoutes.searchView,
       page: () {
-        return HomeView();
+        return const SearchView();
       },
       bindings: [
         HomeBinding(),
+      ],
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: ApplicationRoutes.detailsView,
+      page: () {
+        return const DetailsView();
+      },
+      bindings: [
+        DetailsBinding(),
       ],
       transition: Transition.fadeIn,
     ),

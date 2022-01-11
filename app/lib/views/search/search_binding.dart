@@ -4,8 +4,8 @@ import './search_controller.dart';
 class HomeBinding implements Bindings {
   @override
   Future<void> dependencies() async {
-    Get.put<HomeController>(
-      HomeController(),
+    Get.put<SearchController>(
+      SearchController(),
       permanent: false,
     );
   }

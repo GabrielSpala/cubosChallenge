@@ -1,34 +1,26 @@
 import 'package:app/models/genres.dart';
+import 'package:app/services/movie_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/movie_data.dart';
-import '../../services/dio.dart';
 
-class HomeController extends GetxController
+class SearchController extends GetxController
     with StateMixin<List<Movies>>, ScrollMixin {
-  final DioClient _client = DioClient();
-
   TextEditingController textController = TextEditingController();
 
   int currentPage = 1;
-
-  var acao = false.obs;
-
-  var aventura = false.obs;
-
-  var fantasia = false.obs;
-
-  var comedia = false.obs;
 
   late int totalPages;
 
   bool lastPage = false;
 
-  List<int> genresFilter = <int>[].obs;
+  RxInt genresFilter = 28.obs;
 
   List<Movies> movies = <Movies>[].obs;
 
   List<Genres>? genresList = <Genres>[];
+
+  Movies selectedMovie = Movies();
 
   @override
   Future<void> onEndScroll() async {
@@ -53,17 +45,17 @@ class HomeController extends GetxController
     await getGenres();
     await getMoviesData(isRefresh: true);
     super.onInit();
-    debugPrint('HomeController - onInit');
+    debugPrint('SearchController - onInit');
   }
 
   @override
   void onClose() {
-    debugPrint('HomeController - onClose');
+    debugPrint('SearchController - onClose');
     super.onClose();
   }
 
   Future getGenres() async {
-    GenresData? response = await _client.getGenres();
+    GenresData? response = await Get.find<MovieService>().getGenres();
 
     genresList = response!.genres!.cast<Genres>();
   }
@@ -84,22 +76,19 @@ class HomeController extends GetxController
       MovieData? response;
 
       if (textController.text == "") {
-        response = await _client.getTopMovies(page: currentPage);
+        response =
+            await Get.find<MovieService>().getTopMovies(page: currentPage);
       } else {
-        response = await _client.searchMovies(
-            page: currentPage, search: textController.text);
+        response = await Get.find<MovieService>()
+            .searchMovies(page: currentPage, search: textController.text);
       }
 
       List<Movies> newResponse = <Movies>[];
-      if (genresFilter.isNotEmpty) {
-        for (var movie in response!.results!) {
-          if (movie.genreIds!
-              .any((element) => genresFilter.contains(element))) {
-            newResponse.add(movie);
-          }
+
+      for (var movie in response!.results!) {
+        if (movie.genreIds!.any((element) => genresFilter.value == element)) {
+          newResponse.add(movie);
         }
-      } else {
-        newResponse.addAll(response!.results ?? <Movies>[]);
       }
 
       if (isRefresh && newResponse.isEmpty) {
@@ -135,10 +124,7 @@ class HomeController extends GetxController
     switch (id) {
       case 28:
         {
-          acao.value = !acao.value;
-          genresFilter.contains(28)
-              ? genresFilter.removeWhere((element) => element == 28)
-              : genresFilter.add(28);
+          genresFilter.value = 28;
           debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }
@@ -146,10 +132,7 @@ class HomeController extends GetxController
 
       case 12:
         {
-          aventura.value = !aventura.value;
-          genresFilter.contains(12)
-              ? genresFilter.removeWhere((element) => element == 12)
-              : genresFilter.add(12);
+          genresFilter.value = 12;
           debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }
@@ -157,20 +140,14 @@ class HomeController extends GetxController
 
       case 14:
         {
-          fantasia.value = !fantasia.value;
-          genresFilter.contains(14)
-              ? genresFilter.removeWhere((element) => element == 14)
-              : genresFilter.add(14);
+          genresFilter.value = 14;
           debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }
         break;
       case 35:
         {
-          comedia.value = !comedia.value;
-          genresFilter.contains(35)
-              ? genresFilter.removeWhere((element) => element == 35)
-              : genresFilter.add(35);
+          genresFilter.value = 35;
           debugPrint(genresFilter.toString());
           getMoviesData(isRefresh: true);
         }

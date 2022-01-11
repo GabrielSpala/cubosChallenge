@@ -1,10 +1,11 @@
 import 'package:app/models/genres.dart';
+import 'package:app/models/movie_details.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import '../models/movie_data.dart';
-import './log.dart';
+import 'movie_interceptor.dart';
 
-class DioClient {
+class MovieService {
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://api.themoviedb.org/3',
@@ -15,7 +16,7 @@ class DioClient {
       connectTimeout: 5000,
       receiveTimeout: 3000,
     ),
-  )..interceptors.add(Logging());
+  )..interceptors.add(MovieInterceptor());
 
   Future<MovieData?> getTopMovies({required int page}) async {
     MovieData? movies;
@@ -90,5 +91,29 @@ class DioClient {
     }
 
     return genres;
+  }
+
+  Future<MovieDetails?> getMovieDetails(int? id) async {
+    MovieDetails? movie;
+
+    try {
+      Response moviesDetail = await _dio.get('/movie/$id?');
+
+      debugPrint('Genres Data: ${moviesDetail.data}');
+
+      movie = MovieDetails.fromJson(moviesDetail.data);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        debugPrint('Dio error!');
+        debugPrint('STATUS: ${e.response?.statusCode}');
+        debugPrint('DATA: ${e.response?.data}');
+        debugPrint('HEADERS: ${e.response?.headers}');
+      } else {
+        debugPrint('Error sending request!');
+        debugPrint(e.message);
+      }
+    }
+
+    return movie;
   }
 }
