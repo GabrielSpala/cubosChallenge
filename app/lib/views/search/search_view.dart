@@ -180,7 +180,7 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                   ),
                   onError: (error) => Center(
                     child: Text(
-                      'Error: Cannot get repositories \n$error',
+                      'Ops! \n\n$error',
                       style: const TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),

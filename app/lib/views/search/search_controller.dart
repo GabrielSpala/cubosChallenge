@@ -118,7 +118,9 @@ class SearchController extends GetxController
 
       return true;
     } catch (e) {
-      change(null, status: RxStatus.error(e.toString()));
+      change(null,
+          status: RxStatus.error(
+              "Algo de errado aconteceu, verifique sua conexão com a internet..."));
       return false;
     }
   }
