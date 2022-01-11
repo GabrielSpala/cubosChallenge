@@ -127,9 +127,9 @@ class HomeController extends GetxController
     }
   }
 
-  categoryOnTap(int id) {
-    switch (id) {
-      case 28:
+  categoryOnTap(int index) {
+    switch (index) {
+      case 0:
         {
           acao.value = !acao.value;
           genresFilter.value = 28;
@@ -138,7 +138,7 @@ class HomeController extends GetxController
         }
         break;
 
-      case 12:
+      case 1:
         {
           aventura.value = !aventura.value;
           genresFilter.value = 12;
@@ -147,7 +147,7 @@ class HomeController extends GetxController
         }
         break;
 
-      case 14:
+      case 2:
         {
           fantasia.value = !fantasia.value;
           genresFilter.value = 14;
@@ -155,7 +155,7 @@ class HomeController extends GetxController
           getMoviesData(isRefresh: true);
         }
         break;
-      case 35:
+      case 3:
         {
           comedia.value = !comedia.value;
           genresFilter.value = 35;

@@ -83,7 +83,11 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                       borderWidth: 1,
                       unselectedBorderColor: Colors.blue,
                       radius: 100,
-                      tabs: [
+                      center: false,
+                      onTap: (index) {
+                        controller.categoryOnTap(index);
+                      },
+                      tabs: const [
                         Tab(text: "Ação"),
                         Tab(text: "Aventura"),
                         Tab(text: "Fantasia"),
@@ -91,11 +95,12 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                       ]),
                   Expanded(
                     child: TabBarView(
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
-                        Icon(Icons.directions_car),
-                        Icon(Icons.directions_transit),
-                        Icon(Icons.directions_bike),
-                        Icon(Icons.directions_bike),
+                        buildTabBars(controller),
+                        buildTabBars(controller),
+                        buildTabBars(controller),
+                        buildTabBars(controller),
                       ],
                     ),
                   ),
